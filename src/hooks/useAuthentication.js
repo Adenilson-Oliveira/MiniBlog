@@ -3,7 +3,7 @@ import {db} from '../firebase/config'
 import {
     getAuth,
     createUserWithEmailAndPassword,
-    signInWithEmailAndPassord,
+    signInWithEmailAndPassword,
     updateProfile,
     signOut
 } from 'firebase/auth'
@@ -20,14 +20,15 @@ export const useAuthentication = () => {
 
     const auth = getAuth()
 
-    function checkIfsCancelled() {
+    function checkIfIsCancelled() {
         if(cancelled) {
             return
         }
     }
 
+    // cadastrar
     const createUser = async (data) => {
-        checkIfsCancelled()
+        checkIfIsCancelled()
 
         setLoading(true)
         setError(null)
@@ -68,6 +69,43 @@ export const useAuthentication = () => {
         setLoading(false)
     }
 
+    // logout - sign out
+    const logout = () => {
+
+        checkIfIsCancelled()
+        signOut(auth)
+    }
+
+    // login - sign in
+    const login = async(data) => {
+        checkIfIsCancelled()
+
+        setLoading(true)
+        setError(false)
+
+        try {
+            await signInWithEmailAndPassword(auth, data.email, data.password)
+            setLoading(false)
+        } catch(error) {
+            console.log(error.message)
+            console.log(typeof error.message)
+
+            let sytemErrorMessage 
+
+            if(error.message.includes('user-not-found')) {
+                sytemErrorMessage = 'Usuário não encontrado.'
+            } else if(error.message.includes('wrong-password')) {
+                sytemErrorMessage = 'Senha incorreta'
+            } else {
+                sytemErrorMessage = 'Ocorreu um erro, por favor tente mais tarde.'
+            }
+
+            setError(sytemErrorMessage)
+
+            setLoading(false)
+        }
+    }
+
     useEffect(() => {
         return () => setCancelled(true)
     }, [])
@@ -76,7 +114,9 @@ export const useAuthentication = () => {
         auth,
         createUser,
         error,
-        loading
+        loading,
+        logout,
+        login
     }
 
 
