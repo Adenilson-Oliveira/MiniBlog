@@ -19,6 +19,7 @@ import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import Dashboard from './pages/Dashboard/Dashboard';
 import CreatePost from './pages/CreatePost/CreatePost';
+import Search from './pages/Search/Search';
 
 function App() {
 
@@ -52,6 +53,7 @@ function App() {
               <Route path='/register' element={!user ? <Register /> : <Navigate to='/'/>} />
               <Route path='/posts/create' element={user ? <CreatePost /> : <Navigate to='/login'/>} />
               <Route path='/dashboard' element={user ? <Dashboard /> : <Navigate to='/login'/>} />
+              <Route path='/search' element={<Search />} />
             </Routes>
           </div>
           <Footer />
