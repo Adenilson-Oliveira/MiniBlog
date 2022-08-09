@@ -33,7 +33,15 @@ export const useFetchDocuments = (docCollection, search = null, uid = null) => {
                         orderBy('createdAt', 'desc')
                     )
 
-                } else {
+                } else if(uid) {
+                
+                    q = await query(
+                        collectionRef, 
+                        where('uid', '==', uid), 
+                        orderBy('createdAt', 'desc')
+                    )
+
+                }else {
                     q = await query(collectionRef, orderBy('createdAt', 'desc'))
                 }
 
@@ -45,11 +53,13 @@ export const useFetchDocuments = (docCollection, search = null, uid = null) => {
                             ...doc.data()
                         }))
                     )
+                    setLoading(false)
                 })
                 
             } catch (error) {
                 console.log(error)
                 setError(error.message)
+                setLoading(false)
             }
 
         }
